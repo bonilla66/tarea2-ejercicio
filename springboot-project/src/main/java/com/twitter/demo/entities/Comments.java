@@ -25,11 +25,11 @@ public class Comments {
     private String message;
 
     @JoinColumn(name = "author", nullable = false)
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     private User author;
 
     @JoinColumn(name = "post_id", nullable = false)
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Post post;
 
 
