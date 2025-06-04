@@ -7,6 +7,8 @@ import com.twitter.demo.repositories.UserRepository;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -19,11 +21,20 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     public void createUser(RegisterDto userInfo) {
+
+        if (userRepository.findUserByEmail(userInfo.getEmail()).isPresent()) {
+            throw new RuntimeException("El email ya está en uso");
+        }
         User user = new User();
         user.setName(userInfo.getName());
         user.setEmail(userInfo.getEmail());
-        user.setPassword(userInfo.getPassword());
+        String rawPassword = userInfo.getPassword();
+        String encoded = passwordEncoder.encode(rawPassword);
+        user.setPassword(encoded);
         userRepository.save(user);
     }
 
@@ -49,8 +60,5 @@ public class UserService {
         }
         return new UserDto(optionalUser.get().getId(),
                 optionalUser.get().getName(), optionalUser.get().getEmail());
-
     }
-
-
 }

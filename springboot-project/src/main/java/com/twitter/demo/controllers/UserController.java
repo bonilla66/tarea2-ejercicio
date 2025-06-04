@@ -17,6 +17,7 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 
 @RestController
+@RequestMapping("/users")
 public class UserController {
 
     @Autowired
@@ -38,12 +39,12 @@ public class UserController {
         }
     }
 
-    @GetMapping("/users")
+    @GetMapping("/all")
     public ResponseEntity<List<UserDto>> getAllUsers(){
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
-    @GetMapping("/users/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<User> getUser(@PathVariable("id") String id){
         try {
             return ResponseEntity.ok(userService.getUser(id));
@@ -52,12 +53,12 @@ public class UserController {
         }
     }
 
-    @GetMapping("users/email")
+    @GetMapping("/email")
     public ResponseEntity<UserDto> getUserByEmail(@RequestParam("email") String email){
         return ResponseEntity.ok(userService.getUserByEmail(email));
     }
 
-    @GetMapping("/users/{id}/posts")
+    @GetMapping("/{id}/posts")
     public ResponseEntity<List<UserPostsDto>> getUserPosts(@PathVariable("id") String id){
         if(id == null || id.isEmpty() || !UUID_REGEX.matcher(id).matches()){
             return ResponseEntity.badRequest().build();
@@ -66,7 +67,7 @@ public class UserController {
         return ResponseEntity.ok(postService.getUserPosts(userId));
     }
 
-    @GetMapping("/users/likes")
+    @GetMapping("/likes")
     public ResponseEntity<List<Post>> getLikedPosts(@RequestParam("userId") String id){
         if(id == null || id.isEmpty() || !UUID_REGEX.matcher(id).matches()){
             return ResponseEntity.badRequest().build();
